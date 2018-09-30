@@ -1,0 +1,36 @@
+syntax = "proto3";
+option java_package = "pers.ontology.blaze.protocol"; //
+option java_outer_classname = "ChatProtocol"; //
+
+
+message Message {
+
+    string from = 1;
+
+    string to = 2;
+
+    string body = 3;
+}
+
+message Presence {
+
+    string uid = 1;
+
+    enum Action //
+    {
+        LOGIN = 0; //登录
+        LOGOUT = 1; //登出
+    }
+
+    enum Mode {
+        ONLINE = 0; //在线
+        AWAY = 1; //
+        CHAT = 2;
+        DND = 3;
+        XA = 4;
+        CLOAKING = 5; //隐身
+    }
+
+    Action action = 2;
+    Mode mode = 3;
+}

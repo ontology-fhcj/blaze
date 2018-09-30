@@ -1,0 +1,7 @@
+<protobuf>
+    <type-mapping name="pers.ontology.blaze.protocol.TransportProtocol$Request" hexadecimal="0"/>
+
+    <type-mapping name="pers.ontology.blaze.protocol.TransportProtocol$Ack" hexadecimal="1"/>
+
+    <type-mapping name="pers.ontology.blaze.protocol.TransportProtocol$Notify" hexadecimal="2"/>
+</protobuf>

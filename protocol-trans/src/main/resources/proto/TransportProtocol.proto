@@ -1,0 +1,33 @@
+syntax = "proto3";
+option java_package = "pers.ontology.blaze.protocol"; //
+option java_outer_classname = "TransportProtocol"; //传输协议
+import "google/protobuf/any.proto";
+
+//客户端请求 R
+message Request{
+
+    Header header = 1;
+    google.protobuf.Any body =2;
+}
+
+//服务器应答 A
+message Ack{
+
+    enum Type{
+        CONFIRM =0 ;//服务器已确认
+        ARRIVE = 1; //消息已到达
+    }
+    string timestamp = 1;
+
+    Type type = 2;
+}
+
+//服务器通知
+message Notify{
+    Header header = 1;
+    google.protobuf.Any body =2;
+}
+
+message Header{
+
+}
