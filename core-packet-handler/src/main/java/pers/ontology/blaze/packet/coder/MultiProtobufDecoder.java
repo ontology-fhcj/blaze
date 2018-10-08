@@ -30,7 +30,7 @@ public class MultiProtobufDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode (ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         LOGGER.debug(LogCharGraph.HORIZONTAL_LINE);
-        LOGGER.debug("|" + LogCharGraph.ARROWS + "解码：报文可读长度:" + in.readableBytes());
+        LOGGER.debug("|" + LogCharGraph.ARROWS + "解码(D)：报文可读长度:" + in.readableBytes());
 
         while (in.readableBytes() > 4) { // 如果可读长度小于包头长度，退出。
 
@@ -98,17 +98,17 @@ public class MultiProtobufDecoder extends ByteToMessageDecoder {
             ProtobufXmlConfig protobufXmlConfig = PacketHelper.getProtobufXmlConfig();
             //找到消息类型
             msgClass = protobufXmlConfig.findClass(dataType);
-
             parser = this.reflectFindParser(msgClass);
         } catch (Exception e) {
-            LOGGER.error("解码：解析消息类型报头失败:", e);
+            LOGGER.error("解码(D)：解析消息类型报头失败:", e);
         }
 
         MessageLite messageLite = null;
         if (parser != null) {
+
             messageLite = (MessageLite) parser.parseFrom(array, offset, length);
-            LOGGER.debug("|" + LogCharGraph.ARROWS + "解码：解析消息类型报头：" + dataType);
-            LOGGER.debug("|" + LogCharGraph.ARROWS + "解码：消息类型      ：" + msgClass.getName());
+            LOGGER.debug("|" + LogCharGraph.ARROWS + "解码(D)：解析消息类型报头：数字标识" + dataType);
+            LOGGER.debug("|" + LogCharGraph.ARROWS + "解码(D)：消息类型      ：" + msgClass.getName());
         }
 
         return messageLite;

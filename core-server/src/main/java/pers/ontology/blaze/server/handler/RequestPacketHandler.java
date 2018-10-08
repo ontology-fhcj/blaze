@@ -1,6 +1,8 @@
 package pers.ontology.blaze.server.handler;
 
 import com.google.protobuf.Any;
+import com.google.protobuf.Message;
+import com.google.protobuf.MessageLite;
 import io.netty.channel.ChannelHandlerContext;
 import pers.ontology.blaze.packet.handler.HandlerContext;
 import pers.ontology.blaze.packet.handler.PacketBodyHandler;
@@ -27,25 +29,29 @@ public class RequestPacketHandler implements PacketBodyHandler<TransportProtocol
     @Override
     public Object parse (TransportProtocol.Request msg, ChannelHandlerContext ctx) throws Exception {
         Header header = msg.getHeader();
-        //获取消息体
+
+        //获取任意类型的消息体
         Any generic = msg.getBody();
 
         //判断消息体类型
         //这里目前是if判断，如何动态判断？
-        Class<?> clazz = null;
-        Object body = null;
+        Class<? extends Message> clazz = null;
+        Object body;
+        //
         if (generic.is(ChatProtocol.Message.class)) {
             clazz = ChatProtocol.Message.class;
-            body = generic.unpack(ChatProtocol.Message.class);
         }
+        //
         if (generic.is(ChatProtocol.Presence.class)) {
             clazz = ChatProtocol.Presence.class;
-            body = generic.unpack(ChatProtocol.Presence.class);
         }
 
         if (clazz == null) {
             return null;
         }
+
+        //真实数据
+        body = generic.unpack(clazz);
 
         PacketBodyHandlerRegistry packetBodyHandlerRegistry = HandlerContext.getPacketBodyHandlerRegistry();
         PacketBodyHandler packetBodyHandler = packetBodyHandlerRegistry.findPacketBodyHandler(clazz);

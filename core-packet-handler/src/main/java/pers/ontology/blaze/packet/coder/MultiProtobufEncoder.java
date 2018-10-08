@@ -33,7 +33,7 @@ public class MultiProtobufEncoder extends MessageToByteEncoder<MessageLite> {
         out.writeBytes(header);
         out.writeBytes(body);
 
-        LOGGER.debug("|" + LogCharGraph.ARROWS + "编码：报文长度:" + out.readableBytes());
+        LOGGER.debug("|" + LogCharGraph.ARROWS + "编码(E)：报文长度:" + out.readableBytes());
         LOGGER.debug(LogCharGraph.HORIZONTAL_LINE);
     }
 
@@ -56,7 +56,7 @@ public class MultiProtobufEncoder extends MessageToByteEncoder<MessageLite> {
             ProtobufXmlConfig protobufXmlConfig = PacketHelper.getProtobufXmlConfig();
             messageType = protobufXmlConfig.findHexadecimal(msg.getClass());
         } catch (Exception e) {
-            LOGGER.error("编码：添加消息类型报头失败:", e);
+            LOGGER.error("编码(E)：添加消息类型报头失败:", e);
         }
 
         byte[] header = new byte[4];
@@ -65,8 +65,8 @@ public class MultiProtobufEncoder extends MessageToByteEncoder<MessageLite> {
         header[2] = 0; //
         header[3] = messageType;//消息类型
 
-        LOGGER.debug("|" + LogCharGraph.ARROWS + "编码：添加消息类型报头：" + messageType);
-        LOGGER.debug("|" + LogCharGraph.ARROWS + "编码：消息类型       ：" + msg.getClass().getName());
+        LOGGER.debug("|" + LogCharGraph.ARROWS + "编码(E)：添加消息类型报头：数字标识" + messageType);
+        LOGGER.debug("|" + LogCharGraph.ARROWS + "编码(E)：消息类型       ：" + msg.getClass().getName());
         return header;
 
     }

@@ -62,13 +62,14 @@ public class PacketBodyHandlerRegistry {
 
                 //实际参数类型
                 Type actualTypeArgument = pt.getActualTypeArguments()[0];
-                //忽略T,E,V
+                //忽略T,E,V等类型
                 if (actualTypeArgument instanceof TypeVariableImpl) {
                     continue;
                 }
 
                 Class modelClass = (Class<?>) actualTypeArgument;
 
+                //find
                 if (modelClass == messageClass) {
                     PacketBodyHandler typeHandler = (PacketBodyHandler) packetBodyHandlerClass.newInstance();
                     messageTypeHandlerMapping.put(messageClass, typeHandler);
@@ -82,6 +83,8 @@ public class PacketBodyHandlerRegistry {
     }
 
     /**
+     * 找到 PacketBodyHandler 的泛型类型
+     *
      * @param packetBodyHandlerClass
      *
      * @return
@@ -92,7 +95,7 @@ public class PacketBodyHandlerRegistry {
         Type genericSuperclass = packetBodyHandlerClass.getGenericSuperclass();
 
         //extends
-        if (genericSuperclass != null && genericSuperclass != Object.class) {
+        if (genericSuperclass != null && !ReflectUtils.isTop(genericSuperclass)) {
             if (genericSuperclass instanceof ParameterizedType) {
                 pt = (ParameterizedType) genericSuperclass;
             }

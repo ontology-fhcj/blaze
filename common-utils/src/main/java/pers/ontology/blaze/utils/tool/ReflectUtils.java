@@ -5,6 +5,7 @@ import pers.ontology.blaze.utils.annotation.CannotInstantiate;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 /**
  * <h3>反射工具类</h3>
@@ -80,7 +81,7 @@ public class ReflectUtils {
 
 
     /**
-     * 不能实例化对象吗
+     * 不能实例化对象
      *
      * @param clazz
      *
@@ -89,6 +90,28 @@ public class ReflectUtils {
     public static boolean cannotInstantiate (Class<?> clazz) {
         Annotation annotation = clazz.getAnnotation(CannotInstantiate.class);
         return annotation != null;
+    }
+
+    /**
+     * 是否是顶层父类
+     *
+     * @param type
+     *
+     * @return
+     */
+    public static boolean isTop (Type type) {
+        return type == Object.class;
+    }
+
+    /**
+     * 是否是顶层父类
+     *
+     * @param clazz
+     *
+     * @return
+     */
+    public static boolean isTop (Class clazz) {
+        return clazz == Object.class;
     }
 
 
