@@ -1,11 +1,13 @@
 package pers.ontology.blaze.packet.handler;
 
 import org.apache.commons.collections4.CollectionUtils;
+import pers.ontology.blaze.utils.annotation.CannotInstantiate;
 import pers.ontology.blaze.packet.handler.listener.MessageListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * <h3></h3>
@@ -13,6 +15,7 @@ import java.util.concurrent.locks.Lock;
  * @author ontology
  * @since 1.8
  */
+@CannotInstantiate
 public abstract class AbstractPacketBodyHandler<T> implements PacketBodyHandler<T> {
 
     private List<MessageListener<T>> messageListenerSet;
@@ -20,6 +23,7 @@ public abstract class AbstractPacketBodyHandler<T> implements PacketBodyHandler<
 
     public AbstractPacketBodyHandler () {
         this.messageListenerSet = new ArrayList<>();
+        this.lock = new ReentrantLock();
     }
 
 

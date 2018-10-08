@@ -1,7 +1,11 @@
 package pers.ontology.blaze.packet.handler;
 
 import org.reflections.Reflections;
+import pers.ontology.blaze.utils.annotation.CannotInstantiate;
+import pers.ontology.blaze.utils.tool.ReflectUtils;
+import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -51,11 +55,20 @@ public class PacketBodyHandlerRegistry {
             //FIXME:考虑先缓存起来
             for (Class packetBodyHandlerClass : packetBodyHandlerSet) {
 
-                Type[] genericInterfaces = packetBodyHandlerClass.getGenericInterfaces();
+                //忽略不能实例化的
+                if (ReflectUtils.cannotInstantiate(packetBodyHandlerClass)) {
+                    continue;
+                }
+                ParameterizedType pt = this.getParameterizedType(packetBodyHandlerClass);
 
-                ParameterizedType pt = (ParameterizedType) genericInterfaces[0];
-                Class modelClass = (Class<?>) pt.getActualTypeArguments()[0];
+                //实际参数类型
+                Type actualTypeArgument = pt.getActualTypeArguments()[0];
+                //忽略
+                if (actualTypeArgument instanceof TypeVariableImpl) {
+                    continue;
+                }
 
+                Class modelClass = (Class<?>) actualTypeArgument;
 
                 if (modelClass == messageClass) {
                     PacketBodyHandler typeHandler = (PacketBodyHandler) packetBodyHandlerClass.newInstance();
@@ -67,6 +80,33 @@ public class PacketBodyHandlerRegistry {
 
         return messageTypeHandlerMapping.get(messageClass);
 
+    }
+
+    /**
+     * @param packetBodyHandlerClass
+     *
+     * @return
+     */
+    private ParameterizedType getParameterizedType (Class packetBodyHandlerClass) {
+        ParameterizedType pt = null;
+
+        Type genericSuperclass = packetBodyHandlerClass.getGenericSuperclass();
+
+        //extends
+        if (genericSuperclass != null && genericSuperclass != Object.class) {
+            if (genericSuperclass instanceof ParameterizedType) {
+                pt = (ParameterizedType) genericSuperclass;
+            }
+
+        }
+        //implements
+        else {
+            Type[] genericInterfaces = packetBodyHandlerClass.getGenericInterfaces();
+            if (genericInterfaces[0] instanceof ParameterizedType) {
+                pt = (ParameterizedType) genericInterfaces[0];
+            }
+        }
+        return pt;
     }
 
 }
