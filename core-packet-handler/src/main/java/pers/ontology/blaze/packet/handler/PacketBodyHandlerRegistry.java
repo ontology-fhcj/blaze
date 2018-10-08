@@ -1,11 +1,9 @@
 package pers.ontology.blaze.packet.handler;
 
 import org.reflections.Reflections;
-import pers.ontology.blaze.utils.annotation.CannotInstantiate;
 import pers.ontology.blaze.utils.tool.ReflectUtils;
 import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -20,14 +18,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PacketBodyHandlerRegistry {
 
-    private Map<Class<?>, PacketBodyHandler>        messageTypeHandlerMapping;
+    private              Map<Class<?>, PacketBodyHandler>        messageTypeHandlerMapping;
     //
-    private Reflections                             reflections;
-    private Set<Class<? extends PacketBodyHandler>> packetBodyHandlerSet;
+    private static final String                                  SCAN_PACK = "pers.ontology";
+    private              Reflections                             reflections;
+    private              Set<Class<? extends PacketBodyHandler>> packetBodyHandlerSet;
 
     public PacketBodyHandlerRegistry () {
         this.messageTypeHandlerMapping = new ConcurrentHashMap<>();
-        this.reflections = new Reflections();
+        this.reflections = new Reflections(SCAN_PACK);
         this.preload();
     }
 
@@ -63,7 +62,7 @@ public class PacketBodyHandlerRegistry {
 
                 //实际参数类型
                 Type actualTypeArgument = pt.getActualTypeArguments()[0];
-                //忽略
+                //忽略T,E,V
                 if (actualTypeArgument instanceof TypeVariableImpl) {
                     continue;
                 }

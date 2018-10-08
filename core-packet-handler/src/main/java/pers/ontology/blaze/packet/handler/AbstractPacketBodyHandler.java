@@ -18,9 +18,13 @@ import java.util.concurrent.locks.ReentrantLock;
 @CannotInstantiate
 public abstract class AbstractPacketBodyHandler<T> implements PacketBodyHandler<T> {
 
+    //存储所有监听
     private List<MessageListener<T>> messageListenerSet;
     private Lock                     lock;
 
+    /**
+     *
+     */
     public AbstractPacketBodyHandler () {
         this.messageListenerSet = new ArrayList<>();
         this.lock = new ReentrantLock();
