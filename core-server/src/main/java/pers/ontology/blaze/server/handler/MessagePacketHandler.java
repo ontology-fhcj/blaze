@@ -65,8 +65,8 @@ public class MessagePacketHandler implements PacketBodyHandler<ChatProtocol.Mess
         TransportProtocol.Notify notify = NotifyCreator.get().setBody(message).done();
 
         //向目标端发送Notify
-        Channel channel = channelRegistry.findChannel(message.getTo());
-        channel.writeAndFlush(notify);
+        Channel toChannel = channelRegistry.findChannel(message.getTo());
+        toChannel.writeAndFlush(notify);
     }
 
     /**

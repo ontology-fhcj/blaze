@@ -26,11 +26,13 @@ public class PresencePacketHandler implements PacketBodyHandler<ChatProtocol.Pre
 
         ChannelRegistry channelRegistry = BlazeServerContext.getChannelRegistry();
 
+        //登录
         if (action == ChatProtocol.Presence.Action.LOGIN) {
             channelRegistry.addChannel(presence.getUid(), ctx.channel());
             LOGGER.info("用户{}登录成功！", presence.getUid());
         }
 
+        //退出登录
         if (action == ChatProtocol.Presence.Action.LOGOUT) {
             channelRegistry.removeChannel(presence.getUid());
             LOGGER.info("用户{}退出登录成功！", presence.getUid());
