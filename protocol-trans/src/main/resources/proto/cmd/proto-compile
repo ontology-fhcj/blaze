@@ -1,1 +1,1 @@
-protoc -I=D:/project/workspace_pers/blaze/protocol-trans/src/main/resources/proto --java_out=D:/project/workspace_pers/blaze/protocol-trans/src/main/resources/proto TransportProtocol.proto
+protoc -I=D:/project/workspace_pers/blaze/protocol-trans/src/main/resources/proto --java_out=D:/project/workspace_pers/blaze/protocol-trans/src/main/resources/proto ChatProtocol.proto

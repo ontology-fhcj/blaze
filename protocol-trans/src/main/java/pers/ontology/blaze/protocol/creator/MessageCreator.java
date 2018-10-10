@@ -1,6 +1,8 @@
 package pers.ontology.blaze.protocol.creator;
 
 
+import pers.ontology.blaze.protocol.utils.MessageIdHelper;
+
 import static pers.ontology.blaze.protocol.ChatProtocol.Message;
 
 /**
@@ -53,6 +55,17 @@ public class MessageCreator extends BaseCreator<Message.Builder, Message> {
         return this;
     }
 
+
+    @Override
+    public Message done () {
+        Message.Builder cast = cast();
+        //
+        cast.setId(MessageIdHelper.createId(cast));
+        return (Message) builder.build();
+    }
+
+
+
     /**
      * 转换
      *
@@ -63,7 +76,7 @@ public class MessageCreator extends BaseCreator<Message.Builder, Message> {
         return (Message.Builder) builder;
     }
 
-    public static MessageCreator get(){
+    public static MessageCreator get () {
         return new MessageCreator();
     }
 }

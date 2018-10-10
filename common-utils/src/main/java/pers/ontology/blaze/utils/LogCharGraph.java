@@ -14,5 +14,7 @@ public class LogCharGraph {
 
     public static final String HORIZONTAL_WAVE = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 
-    public static final String ARROWS = "->";
+    public static final String ARROWS = "  ->  ";
+
+    public static final String TAB = "    ";
 }

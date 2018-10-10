@@ -66,6 +66,17 @@ public class ChannelRegistry {
     }
 
     /**
+     * 是否存在channel
+     *
+     * @param uid
+     *
+     * @return
+     */
+    public boolean isExist (String uid) {
+        return channelMap.containsKey(uid);
+    }
+
+    /**
      * 基本的关闭监听处理
      */
     class BaseCloseListener implements GenericFutureListener<Future<? super Void>> {

@@ -46,7 +46,8 @@ public final class TransportProtocol {
   }
   /**
    * <pre>
-   *客户端请求 R
+   *客户端请求“：
+   *   客户端向im server发送的消息”
    * </pre>
    *
    * Protobuf type {@code Request}
@@ -366,7 +367,8 @@ public final class TransportProtocol {
     }
     /**
      * <pre>
-     *客户端请求 R
+     *客户端请求“：
+     *   客户端向im server发送的消息”
      * </pre>
      *
      * Protobuf type {@code Request}
@@ -828,27 +830,37 @@ public final class TransportProtocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string timestamp = 1;</code>
+     * <code>string messageId = 1;</code>
+     */
+    String getMessageId ();
+    /**
+     * <code>string messageId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getMessageIdBytes ();
+
+    /**
+     * <code>string timestamp = 2;</code>
      */
     String getTimestamp ();
     /**
-     * <code>string timestamp = 1;</code>
+     * <code>string timestamp = 2;</code>
      */
     com.google.protobuf.ByteString
         getTimestampBytes ();
 
     /**
-     * <code>.Ack.Type type = 2;</code>
+     * <code>.Ack.Type type = 3;</code>
      */
     int getTypeValue ();
     /**
-     * <code>.Ack.Type type = 2;</code>
+     * <code>.Ack.Type type = 3;</code>
      */
     Ack.Type getType ();
   }
   /**
    * <pre>
-   *服务器应答 A
+   *告知已收到
    * </pre>
    *
    * Protobuf type {@code Ack}
@@ -863,6 +875,7 @@ public final class TransportProtocol {
       super(builder);
     }
     private Ack() {
+      messageId_ = "";
       timestamp_ = "";
       type_ = 0;
     }
@@ -894,10 +907,16 @@ public final class TransportProtocol {
             case 10: {
               String s = input.readStringRequireUtf8();
 
+              messageId_ = s;
+              break;
+            }
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
               timestamp_ = s;
               break;
             }
-            case 16: {
+            case 24: {
               int rawValue = input.readEnum();
 
               type_ = rawValue;
@@ -936,13 +955,18 @@ public final class TransportProtocol {
     }
 
     /**
+     * <pre>
+     * </pre>
+     *
      * Protobuf enum {@code Ack.Type}
      */
     public enum Type
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <pre>
-       *服务器已确认
+       *IS确认收到客户端消息：
+       *    (A-client)向(B-client)发送了一条消息，这条消息会经过IS,当到达IS时，
+       *  IS将发送给(A-client)一条CONFIRM消息，以说明IS收到(A-client)的消息。
        * </pre>
        *
        * <code>CONFIRM = 0;</code>
@@ -950,7 +974,29 @@ public final class TransportProtocol {
       CONFIRM(0),
       /**
        * <pre>
-       *消息已到达
+       *客户端确认收到IS通知：
+       *    (B-client)收到IS向其发送的Notify，将向IS发送confirm-notify，
+       * 其意义是告诉IS，(B-client)已经收到消息。
+       * </pre>
+       *
+       * <code>CONFIRM_NOTIFY = 3;</code>
+       */
+      CONFIRM_NOTIFY(3),
+      /**
+       * <pre>
+       *IS确认收到“‘客户端确认收到消息’”：
+       *     IS收到(B-client)发送的CONFIRM-NOTIFY的时候IS将发送给(B-client)
+       *  一条CONFIRM_CONFIRM_NOTIFY消息,以说明服务器收到(B-client)的CONFIRM-NOTIFY。
+       * </pre>
+       *
+       * <code>CONFIRM_CONFIRM_NOTIFY = 2;</code>
+       */
+      CONFIRM_CONFIRM_NOTIFY(2),
+      /**
+       * <pre>
+       *消息已到达：
+       *     (A-client)向(B-client)发送的消息已经送达(B-client)，这时服务器将发送给(A-client)
+       *  一条ARRIVE消息,说明消息可靠到达。
        * </pre>
        *
        * <code>ARRIVE = 1;</code>
@@ -961,7 +1007,9 @@ public final class TransportProtocol {
 
       /**
        * <pre>
-       *服务器已确认
+       *IS确认收到客户端消息：
+       *    (A-client)向(B-client)发送了一条消息，这条消息会经过IS,当到达IS时，
+       *  IS将发送给(A-client)一条CONFIRM消息，以说明IS收到(A-client)的消息。
        * </pre>
        *
        * <code>CONFIRM = 0;</code>
@@ -969,7 +1017,29 @@ public final class TransportProtocol {
       public static final int CONFIRM_VALUE = 0;
       /**
        * <pre>
-       *消息已到达
+       *客户端确认收到IS通知：
+       *    (B-client)收到IS向其发送的Notify，将向IS发送confirm-notify，
+       * 其意义是告诉IS，(B-client)已经收到消息。
+       * </pre>
+       *
+       * <code>CONFIRM_NOTIFY = 3;</code>
+       */
+      public static final int CONFIRM_NOTIFY_VALUE = 3;
+      /**
+       * <pre>
+       *IS确认收到“‘客户端确认收到消息’”：
+       *     IS收到(B-client)发送的CONFIRM-NOTIFY的时候IS将发送给(B-client)
+       *  一条CONFIRM_CONFIRM_NOTIFY消息,以说明服务器收到(B-client)的CONFIRM-NOTIFY。
+       * </pre>
+       *
+       * <code>CONFIRM_CONFIRM_NOTIFY = 2;</code>
+       */
+      public static final int CONFIRM_CONFIRM_NOTIFY_VALUE = 2;
+      /**
+       * <pre>
+       *消息已到达：
+       *     (A-client)向(B-client)发送的消息已经送达(B-client)，这时服务器将发送给(A-client)
+       *  一条ARRIVE消息,说明消息可靠到达。
        * </pre>
        *
        * <code>ARRIVE = 1;</code>
@@ -996,6 +1066,8 @@ public final class TransportProtocol {
       public static Type forNumber(int value) {
         switch (value) {
           case 0: return CONFIRM;
+          case 3: return CONFIRM_NOTIFY;
+          case 2: return CONFIRM_CONFIRM_NOTIFY;
           case 1: return ARRIVE;
           default: return null;
         }
@@ -1049,10 +1121,44 @@ public final class TransportProtocol {
       // @@protoc_insertion_point(enum_scope:Ack.Type)
     }
 
-    public static final int TIMESTAMP_FIELD_NUMBER = 1;
+    public static final int MESSAGEID_FIELD_NUMBER = 1;
+    private volatile Object messageId_;
+    /**
+     * <code>string messageId = 1;</code>
+     */
+    public String getMessageId() {
+      Object ref = messageId_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        messageId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string messageId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getMessageIdBytes() {
+      Object ref = messageId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        messageId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 2;
     private volatile Object timestamp_;
     /**
-     * <code>string timestamp = 1;</code>
+     * <code>string timestamp = 2;</code>
      */
     public String getTimestamp() {
       Object ref = timestamp_;
@@ -1067,7 +1173,7 @@ public final class TransportProtocol {
       }
     }
     /**
-     * <code>string timestamp = 1;</code>
+     * <code>string timestamp = 2;</code>
      */
     public com.google.protobuf.ByteString
         getTimestampBytes() {
@@ -1083,16 +1189,16 @@ public final class TransportProtocol {
       }
     }
 
-    public static final int TYPE_FIELD_NUMBER = 2;
+    public static final int TYPE_FIELD_NUMBER = 3;
     private int type_;
     /**
-     * <code>.Ack.Type type = 2;</code>
+     * <code>.Ack.Type type = 3;</code>
      */
     public int getTypeValue() {
       return type_;
     }
     /**
-     * <code>.Ack.Type type = 2;</code>
+     * <code>.Ack.Type type = 3;</code>
      */
     public Type getType() {
       @SuppressWarnings("deprecation")
@@ -1114,11 +1220,14 @@ public final class TransportProtocol {
     @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (!getMessageIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, messageId_);
+      }
       if (!getTimestampBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, timestamp_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, timestamp_);
       }
       if (type_ != Type.CONFIRM.getNumber()) {
-        output.writeEnum(2, type_);
+        output.writeEnum(3, type_);
       }
       unknownFields.writeTo(output);
     }
@@ -1129,12 +1238,15 @@ public final class TransportProtocol {
       if (size != -1) return size;
 
       size = 0;
+      if (!getMessageIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, messageId_);
+      }
       if (!getTimestampBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, timestamp_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, timestamp_);
       }
       if (type_ != Type.CONFIRM.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, type_);
+          .computeEnumSize(3, type_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1152,6 +1264,8 @@ public final class TransportProtocol {
       Ack other = (Ack) obj;
 
       boolean result = true;
+      result = result && getMessageId()
+          .equals(other.getMessageId());
       result = result && getTimestamp()
           .equals(other.getTimestamp());
       result = result && type_ == other.type_;
@@ -1166,6 +1280,8 @@ public final class TransportProtocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + MESSAGEID_FIELD_NUMBER;
+      hash = (53 * hash) + getMessageId().hashCode();
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + getTimestamp().hashCode();
       hash = (37 * hash) + TYPE_FIELD_NUMBER;
@@ -1267,7 +1383,7 @@ public final class TransportProtocol {
     }
     /**
      * <pre>
-     *服务器应答 A
+     *告知已收到
      * </pre>
      *
      * Protobuf type {@code Ack}
@@ -1307,6 +1423,8 @@ public final class TransportProtocol {
       @Override
       public Builder clear() {
         super.clear();
+        messageId_ = "";
+
         timestamp_ = "";
 
         type_ = 0;
@@ -1337,6 +1455,7 @@ public final class TransportProtocol {
       @Override
       public Ack buildPartial() {
         Ack result = new Ack(this);
+        result.messageId_ = messageId_;
         result.timestamp_ = timestamp_;
         result.type_ = type_;
         onBuilt();
@@ -1387,6 +1506,10 @@ public final class TransportProtocol {
 
       public Builder mergeFrom(Ack other) {
         if (other == Ack.getDefaultInstance()) return this;
+        if (!other.getMessageId().isEmpty()) {
+          messageId_ = other.messageId_;
+          onChanged();
+        }
         if (!other.getTimestamp().isEmpty()) {
           timestamp_ = other.timestamp_;
           onChanged();
@@ -1423,9 +1546,78 @@ public final class TransportProtocol {
         return this;
       }
 
+      private Object messageId_ = "";
+      /**
+       * <code>string messageId = 1;</code>
+       */
+      public String getMessageId() {
+        Object ref = messageId_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          messageId_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string messageId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMessageIdBytes() {
+        Object ref = messageId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          messageId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string messageId = 1;</code>
+       */
+      public Builder setMessageId(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        messageId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string messageId = 1;</code>
+       */
+      public Builder clearMessageId() {
+        
+        messageId_ = getDefaultInstance().getMessageId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string messageId = 1;</code>
+       */
+      public Builder setMessageIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        messageId_ = value;
+        onChanged();
+        return this;
+      }
+
       private Object timestamp_ = "";
       /**
-       * <code>string timestamp = 1;</code>
+       * <code>string timestamp = 2;</code>
        */
       public String getTimestamp() {
         Object ref = timestamp_;
@@ -1440,7 +1632,7 @@ public final class TransportProtocol {
         }
       }
       /**
-       * <code>string timestamp = 1;</code>
+       * <code>string timestamp = 2;</code>
        */
       public com.google.protobuf.ByteString
           getTimestampBytes() {
@@ -1456,7 +1648,7 @@ public final class TransportProtocol {
         }
       }
       /**
-       * <code>string timestamp = 1;</code>
+       * <code>string timestamp = 2;</code>
        */
       public Builder setTimestamp(
           String value) {
@@ -1469,7 +1661,7 @@ public final class TransportProtocol {
         return this;
       }
       /**
-       * <code>string timestamp = 1;</code>
+       * <code>string timestamp = 2;</code>
        */
       public Builder clearTimestamp() {
         
@@ -1478,7 +1670,7 @@ public final class TransportProtocol {
         return this;
       }
       /**
-       * <code>string timestamp = 1;</code>
+       * <code>string timestamp = 2;</code>
        */
       public Builder setTimestampBytes(
           com.google.protobuf.ByteString value) {
@@ -1494,13 +1686,13 @@ public final class TransportProtocol {
 
       private int type_ = 0;
       /**
-       * <code>.Ack.Type type = 2;</code>
+       * <code>.Ack.Type type = 3;</code>
        */
       public int getTypeValue() {
         return type_;
       }
       /**
-       * <code>.Ack.Type type = 2;</code>
+       * <code>.Ack.Type type = 3;</code>
        */
       public Builder setTypeValue(int value) {
         type_ = value;
@@ -1508,7 +1700,7 @@ public final class TransportProtocol {
         return this;
       }
       /**
-       * <code>.Ack.Type type = 2;</code>
+       * <code>.Ack.Type type = 3;</code>
        */
       public Type getType() {
         @SuppressWarnings("deprecation")
@@ -1516,7 +1708,7 @@ public final class TransportProtocol {
         return result == null ? Type.UNRECOGNIZED : result;
       }
       /**
-       * <code>.Ack.Type type = 2;</code>
+       * <code>.Ack.Type type = 3;</code>
        */
       public Builder setType(Type value) {
         if (value == null) {
@@ -1528,7 +1720,7 @@ public final class TransportProtocol {
         return this;
       }
       /**
-       * <code>.Ack.Type type = 2;</code>
+       * <code>.Ack.Type type = 3;</code>
        */
       public Builder clearType() {
         
@@ -2401,8 +2593,22 @@ public final class TransportProtocol {
   public interface HeaderOrBuilder extends
       // @@protoc_insertion_point(interface_extends:Header)
       com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string timestamp = 1;</code>
+     */
+    String getTimestamp ();
+    /**
+     * <code>string timestamp = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTimestampBytes ();
   }
   /**
+   * <pre>
+   *头部
+   * </pre>
+   *
    * Protobuf type {@code Header}
    */
   public  static final class Header extends
@@ -2415,6 +2621,7 @@ public final class TransportProtocol {
       super(builder);
     }
     private Header() {
+      timestamp_ = "";
     }
 
     @Override
@@ -2430,6 +2637,7 @@ public final class TransportProtocol {
       if (extensionRegistry == null) {
         throw new NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -2440,6 +2648,12 @@ public final class TransportProtocol {
             case 0:
               done = true;
               break;
+            case 10: {
+              String s = input.readStringRequireUtf8();
+
+              timestamp_ = s;
+              break;
+            }
             default: {
               if (!parseUnknownFieldProto3(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -2472,6 +2686,40 @@ public final class TransportProtocol {
               Header.class, Builder.class);
     }
 
+    public static final int TIMESTAMP_FIELD_NUMBER = 1;
+    private volatile Object timestamp_;
+    /**
+     * <code>string timestamp = 1;</code>
+     */
+    public String getTimestamp() {
+      Object ref = timestamp_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        timestamp_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string timestamp = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTimestampBytes() {
+      Object ref = timestamp_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        timestamp_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @Override
     public final boolean isInitialized() {
@@ -2486,6 +2734,9 @@ public final class TransportProtocol {
     @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (!getTimestampBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, timestamp_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -2495,6 +2746,9 @@ public final class TransportProtocol {
       if (size != -1) return size;
 
       size = 0;
+      if (!getTimestampBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, timestamp_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2511,6 +2765,8 @@ public final class TransportProtocol {
       Header other = (Header) obj;
 
       boolean result = true;
+      result = result && getTimestamp()
+          .equals(other.getTimestamp());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -2522,6 +2778,8 @@ public final class TransportProtocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + getTimestamp().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2618,6 +2876,10 @@ public final class TransportProtocol {
       return builder;
     }
     /**
+     * <pre>
+     *头部
+     * </pre>
+     *
      * Protobuf type {@code Header}
      */
     public static final class Builder extends
@@ -2655,6 +2917,8 @@ public final class TransportProtocol {
       @Override
       public Builder clear() {
         super.clear();
+        timestamp_ = "";
+
         return this;
       }
 
@@ -2681,6 +2945,7 @@ public final class TransportProtocol {
       @Override
       public Header buildPartial() {
         Header result = new Header(this);
+        result.timestamp_ = timestamp_;
         onBuilt();
         return result;
       }
@@ -2729,6 +2994,10 @@ public final class TransportProtocol {
 
       public Builder mergeFrom(Header other) {
         if (other == Header.getDefaultInstance()) return this;
+        if (!other.getTimestamp().isEmpty()) {
+          timestamp_ = other.timestamp_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -2755,6 +3024,75 @@ public final class TransportProtocol {
             mergeFrom(parsedMessage);
           }
         }
+        return this;
+      }
+
+      private Object timestamp_ = "";
+      /**
+       * <code>string timestamp = 1;</code>
+       */
+      public String getTimestamp() {
+        Object ref = timestamp_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          timestamp_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string timestamp = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTimestampBytes() {
+        Object ref = timestamp_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          timestamp_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string timestamp = 1;</code>
+       */
+      public Builder setTimestamp(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 1;</code>
+       */
+      public Builder clearTimestamp() {
+        
+        timestamp_ = getDefaultInstance().getTimestamp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 1;</code>
+       */
+      public Builder setTimestampBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        timestamp_ = value;
+        onChanged();
         return this;
       }
       @Override
@@ -2842,12 +3180,14 @@ public final class TransportProtocol {
       "\n\027TransportProtocol.proto\032\031google/protob" +
       "uf/any.proto\"F\n\007Request\022\027\n\006header\030\001 \001(\0132" +
       "\007.Header\022\"\n\004body\030\002 \001(\0132\024.google.protobuf" +
-      ".Any\"R\n\003Ack\022\021\n\ttimestamp\030\001 \001(\t\022\027\n\004type\030\002" +
-      " \001(\0162\t.Ack.Type\"\037\n\004Type\022\013\n\007CONFIRM\020\000\022\n\n\006" +
-      "ARRIVE\020\001\"E\n\006Notify\022\027\n\006header\030\001 \001(\0132\007.Hea" +
-      "der\022\"\n\004body\030\002 \001(\0132\024.google.protobuf.Any\"" +
-      "\010\n\006HeaderB1\n\034pers.ontology.blaze.protoco" +
-      "lB\021TransportProtocolb\006proto3"
+      ".Any\"\225\001\n\003Ack\022\021\n\tmessageId\030\001 \001(\t\022\021\n\ttimes" +
+      "tamp\030\002 \001(\t\022\027\n\004type\030\003 \001(\0162\t.Ack.Type\"O\n\004T" +
+      "ype\022\013\n\007CONFIRM\020\000\022\022\n\016CONFIRM_NOTIFY\020\003\022\032\n\026" +
+      "CONFIRM_CONFIRM_NOTIFY\020\002\022\n\n\006ARRIVE\020\001\"E\n\006" +
+      "Notify\022\027\n\006header\030\001 \001(\0132\007.Header\022\"\n\004body\030" +
+      "\002 \001(\0132\024.google.protobuf.Any\"\033\n\006Header\022\021\n" +
+      "\ttimestamp\030\001 \001(\tB1\n\034pers.ontology.blaze." +
+      "protocolB\021TransportProtocolb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2873,7 +3213,7 @@ public final class TransportProtocol {
     internal_static_Ack_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Ack_descriptor,
-        new String[] { "Timestamp", "Type", });
+        new String[] { "MessageId", "Timestamp", "Type", });
     internal_static_Notify_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_Notify_fieldAccessorTable = new
@@ -2885,7 +3225,7 @@ public final class TransportProtocol {
     internal_static_Header_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Header_descriptor,
-        new String[] { });
+        new String[] { "Timestamp", });
     com.google.protobuf.AnyProto.getDescriptor();
   }
 

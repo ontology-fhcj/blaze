@@ -1,6 +1,7 @@
 package pers.ontology.blaze.server.handler;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,8 @@ import pers.ontology.blaze.protocol.TransportProtocol.Ack;
 import pers.ontology.blaze.protocol.creator.AckCreator;
 import pers.ontology.blaze.protocol.creator.NotifyCreator;
 import pers.ontology.blaze.server.ChannelRegistry;
+import pers.ontology.blaze.server.retry.FailFutureListener;
+import pers.ontology.blaze.server.retry.RetryPerformer;
 import pers.ontology.blaze.server.server.BlazeServerContext;
 import pers.ontology.blaze.utils.LogCharGraph;
 
@@ -37,8 +40,7 @@ public class MessagePacketHandler implements PacketBodyHandler<ChatProtocol.Mess
         String from = message.getFrom();
         String to = message.getTo();
         //        String body = message.getBody();
-        LOGGER.debug("-消息发送:" + from + LogCharGraph.ARROWS + to);
-
+        LOGGER.info("我收到来自source-client的消息" + LogCharGraph.ARROWS + "[" + message.getId() + "]:");
         //获取通道注册表
         ChannelRegistry channelRegistry = BlazeServerContext.getChannelRegistry();
 
@@ -64,13 +66,38 @@ public class MessagePacketHandler implements PacketBodyHandler<ChatProtocol.Mess
 
         TransportProtocol.Notify notify = NotifyCreator.get().setBody(message).done();
 
-        //向目标端发送Notify
-        Channel toChannel = channelRegistry.findChannel(message.getTo());
-        toChannel.writeAndFlush(notify);
+        String to = message.getTo();
+        //目标端在线
+        if (channelRegistry.isExist(to)) {
+            //向目标端发送Notify
+            Channel toChannel = channelRegistry.findChannel(to);
+            ChannelFuture channelFuture = toChannel.writeAndFlush(notify);
+
+
+            FailFutureListener failFutureListener = new FailFutureListener(new RetryPerformer(notify, toChannel));
+            channelFuture.addListener(failFutureListener);
+            channelFuture.addListener(future -> {
+                //发送成功
+                if (future.cause() == null) {
+                    LOGGER.info(LogCharGraph.TAB + LogCharGraph.HORIZONTAL_LINE);
+                    LOGGER.info(LogCharGraph.TAB + "|" + LogCharGraph.ARROWS + "MsgID:" + message.getId());
+                    LOGGER.info(LogCharGraph.TAB + "|" + LogCharGraph.ARROWS + "向target-client发送的消息(Notify)成功！");
+                    LOGGER.info(LogCharGraph.TAB + LogCharGraph.HORIZONTAL_LINE);
+                }
+            });
+        }
+        //目标端不在线
+        else {
+            //TODO:1、将消息内容缓存
+            //TODO:2、向发送端回执ACK-ARRIVE
+
+            LOGGER.warn("用户" + to + "已离线，消息内容将缓存");
+        }
+
     }
 
     /**
-     * 应答
+     * 向发送端应答ACK-CONFIRM
      *
      * <p>代表着服务器已收到来自客户端的消息
      *
@@ -79,10 +106,25 @@ public class MessagePacketHandler implements PacketBodyHandler<ChatProtocol.Mess
      */
     private void acknowledge (ChatProtocol.Message message, ChannelRegistry channelRegistry) {
 
-        Ack ack = AckCreator.get().setType(Ack.Type.CONFIRM).setTimestamp().done();
+        String messageId = message.getId();
+        Ack ack_c = AckCreator.get().setType(Ack.Type.CONFIRM).setTimestamp().setMessageId(messageId).done();
 
         //向请求端回执Ack
         Channel fromChannel = channelRegistry.findChannel(message.getFrom());
-        fromChannel.writeAndFlush(ack);
+        ChannelFuture channelFuture = fromChannel.writeAndFlush(ack_c);
+
+
+        FailFutureListener failFutureListener = new FailFutureListener(new RetryPerformer(ack_c, fromChannel));
+        channelFuture.addListener(failFutureListener);
+        channelFuture.addListener(future -> {
+            //发送成功
+            if (future.cause() == null) {
+                LOGGER.info(LogCharGraph.TAB + LogCharGraph.HORIZONTAL_LINE);
+                LOGGER.info(LogCharGraph.TAB + "|" + LogCharGraph.ARROWS + "MsgID:" + messageId);
+                LOGGER.info(
+                        LogCharGraph.TAB + "|" + LogCharGraph.ARROWS + "向source-client发送我收到 '你发送的消息' 的消息(Ack-C)成功！");
+                LOGGER.info(LogCharGraph.TAB + LogCharGraph.HORIZONTAL_LINE);
+            }
+        });
     }
 }

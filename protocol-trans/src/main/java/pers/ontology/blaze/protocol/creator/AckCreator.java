@@ -35,6 +35,20 @@ public class AckCreator extends BaseCreator<Ack.Builder, Ack> {
         ackBuilder.setTimestamp(String.valueOf(System.currentTimeMillis()));
         return this;
     }
+
+    /**
+     *
+     * @param messageId
+     * @return
+     */
+    public AckCreator setMessageId(String messageId){
+        Ack.Builder ackBuilder = cast();
+        ackBuilder.setMessageId(messageId);
+        return this;
+    }
+
+
+
     /**
      * 转换
      *

@@ -19,31 +19,87 @@ public final class ChatProtocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string from = 1;</code>
+     * <pre>
+     *消息的唯一标识
+     *    它的格式如下：
+     *    247058835670437888-from:name-to:name
+     * </pre>
+     *
+     * <code>string id = 1;</code>
+     */
+    String getId ();
+    /**
+     * <pre>
+     *消息的唯一标识
+     *    它的格式如下：
+     *    247058835670437888-from:name-to:name
+     * </pre>
+     *
+     * <code>string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes ();
+
+    /**
+     * <code>string timestamp = 2;</code>
+     */
+    String getTimestamp ();
+    /**
+     * <code>string timestamp = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getTimestampBytes ();
+
+    /**
+     * <pre>
+     *发送端
+     * </pre>
+     *
+     * <code>string from = 3;</code>
      */
     String getFrom ();
     /**
-     * <code>string from = 1;</code>
+     * <pre>
+     *发送端
+     * </pre>
+     *
+     * <code>string from = 3;</code>
      */
     com.google.protobuf.ByteString
         getFromBytes ();
 
     /**
-     * <code>string to = 2;</code>
+     * <pre>
+     *目标端
+     * </pre>
+     *
+     * <code>string to = 4;</code>
      */
     String getTo ();
     /**
-     * <code>string to = 2;</code>
+     * <pre>
+     *目标端
+     * </pre>
+     *
+     * <code>string to = 4;</code>
      */
     com.google.protobuf.ByteString
         getToBytes ();
 
     /**
-     * <code>string body = 3;</code>
+     * <pre>
+     *消息体
+     * </pre>
+     *
+     * <code>string body = 5;</code>
      */
     String getBody ();
     /**
-     * <code>string body = 3;</code>
+     * <pre>
+     *消息体
+     * </pre>
+     *
+     * <code>string body = 5;</code>
      */
     com.google.protobuf.ByteString
         getBodyBytes ();
@@ -61,6 +117,8 @@ public final class ChatProtocol {
       super(builder);
     }
     private Message() {
+      id_ = "";
+      timestamp_ = "";
       from_ = "";
       to_ = "";
       body_ = "";
@@ -93,16 +151,28 @@ public final class ChatProtocol {
             case 10: {
               String s = input.readStringRequireUtf8();
 
-              from_ = s;
+              id_ = s;
               break;
             }
             case 18: {
               String s = input.readStringRequireUtf8();
 
-              to_ = s;
+              timestamp_ = s;
               break;
             }
             case 26: {
+              String s = input.readStringRequireUtf8();
+
+              from_ = s;
+              break;
+            }
+            case 34: {
+              String s = input.readStringRequireUtf8();
+
+              to_ = s;
+              break;
+            }
+            case 42: {
               String s = input.readStringRequireUtf8();
 
               body_ = s;
@@ -140,10 +210,94 @@ public final class ChatProtocol {
               Message.class, Builder.class);
     }
 
-    public static final int FROM_FIELD_NUMBER = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile Object id_;
+    /**
+     * <pre>
+     *消息的唯一标识
+     *    它的格式如下：
+     *    247058835670437888-from:name-to:name
+     * </pre>
+     *
+     * <code>string id = 1;</code>
+     */
+    public String getId() {
+      Object ref = id_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        id_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     *消息的唯一标识
+     *    它的格式如下：
+     *    247058835670437888-from:name-to:name
+     * </pre>
+     *
+     * <code>string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      Object ref = id_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 2;
+    private volatile Object timestamp_;
+    /**
+     * <code>string timestamp = 2;</code>
+     */
+    public String getTimestamp() {
+      Object ref = timestamp_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        timestamp_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string timestamp = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTimestampBytes() {
+      Object ref = timestamp_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        timestamp_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int FROM_FIELD_NUMBER = 3;
     private volatile Object from_;
     /**
-     * <code>string from = 1;</code>
+     * <pre>
+     *发送端
+     * </pre>
+     *
+     * <code>string from = 3;</code>
      */
     public String getFrom() {
       Object ref = from_;
@@ -158,7 +312,11 @@ public final class ChatProtocol {
       }
     }
     /**
-     * <code>string from = 1;</code>
+     * <pre>
+     *发送端
+     * </pre>
+     *
+     * <code>string from = 3;</code>
      */
     public com.google.protobuf.ByteString
         getFromBytes() {
@@ -174,10 +332,14 @@ public final class ChatProtocol {
       }
     }
 
-    public static final int TO_FIELD_NUMBER = 2;
+    public static final int TO_FIELD_NUMBER = 4;
     private volatile Object to_;
     /**
-     * <code>string to = 2;</code>
+     * <pre>
+     *目标端
+     * </pre>
+     *
+     * <code>string to = 4;</code>
      */
     public String getTo() {
       Object ref = to_;
@@ -192,7 +354,11 @@ public final class ChatProtocol {
       }
     }
     /**
-     * <code>string to = 2;</code>
+     * <pre>
+     *目标端
+     * </pre>
+     *
+     * <code>string to = 4;</code>
      */
     public com.google.protobuf.ByteString
         getToBytes() {
@@ -208,10 +374,14 @@ public final class ChatProtocol {
       }
     }
 
-    public static final int BODY_FIELD_NUMBER = 3;
+    public static final int BODY_FIELD_NUMBER = 5;
     private volatile Object body_;
     /**
-     * <code>string body = 3;</code>
+     * <pre>
+     *消息体
+     * </pre>
+     *
+     * <code>string body = 5;</code>
      */
     public String getBody() {
       Object ref = body_;
@@ -226,7 +396,11 @@ public final class ChatProtocol {
       }
     }
     /**
-     * <code>string body = 3;</code>
+     * <pre>
+     *消息体
+     * </pre>
+     *
+     * <code>string body = 5;</code>
      */
     public com.google.protobuf.ByteString
         getBodyBytes() {
@@ -256,14 +430,20 @@ public final class ChatProtocol {
     @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      if (!getIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+      }
+      if (!getTimestampBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, timestamp_);
+      }
       if (!getFromBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, from_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, from_);
       }
       if (!getToBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, to_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, to_);
       }
       if (!getBodyBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, body_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, body_);
       }
       unknownFields.writeTo(output);
     }
@@ -274,14 +454,20 @@ public final class ChatProtocol {
       if (size != -1) return size;
 
       size = 0;
+      if (!getIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+      }
+      if (!getTimestampBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, timestamp_);
+      }
       if (!getFromBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, from_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, from_);
       }
       if (!getToBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, to_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, to_);
       }
       if (!getBodyBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, body_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, body_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -299,6 +485,10 @@ public final class ChatProtocol {
       Message other = (Message) obj;
 
       boolean result = true;
+      result = result && getId()
+          .equals(other.getId());
+      result = result && getTimestamp()
+          .equals(other.getTimestamp());
       result = result && getFrom()
           .equals(other.getFrom());
       result = result && getTo()
@@ -316,6 +506,10 @@ public final class ChatProtocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId().hashCode();
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + getTimestamp().hashCode();
       hash = (37 * hash) + FROM_FIELD_NUMBER;
       hash = (53 * hash) + getFrom().hashCode();
       hash = (37 * hash) + TO_FIELD_NUMBER;
@@ -455,6 +649,10 @@ public final class ChatProtocol {
       @Override
       public Builder clear() {
         super.clear();
+        id_ = "";
+
+        timestamp_ = "";
+
         from_ = "";
 
         to_ = "";
@@ -487,6 +685,8 @@ public final class ChatProtocol {
       @Override
       public Message buildPartial() {
         Message result = new Message(this);
+        result.id_ = id_;
+        result.timestamp_ = timestamp_;
         result.from_ = from_;
         result.to_ = to_;
         result.body_ = body_;
@@ -538,6 +738,14 @@ public final class ChatProtocol {
 
       public Builder mergeFrom(Message other) {
         if (other == Message.getDefaultInstance()) return this;
+        if (!other.getId().isEmpty()) {
+          id_ = other.id_;
+          onChanged();
+        }
+        if (!other.getTimestamp().isEmpty()) {
+          timestamp_ = other.timestamp_;
+          onChanged();
+        }
         if (!other.getFrom().isEmpty()) {
           from_ = other.from_;
           onChanged();
@@ -579,9 +787,181 @@ public final class ChatProtocol {
         return this;
       }
 
+      private Object id_ = "";
+      /**
+       * <pre>
+       *消息的唯一标识
+       *    它的格式如下：
+       *    247058835670437888-from:name-to:name
+       * </pre>
+       *
+       * <code>string id = 1;</code>
+       */
+      public String getId() {
+        Object ref = id_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          id_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <pre>
+       *消息的唯一标识
+       *    它的格式如下：
+       *    247058835670437888-from:name-to:name
+       * </pre>
+       *
+       * <code>string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       *消息的唯一标识
+       *    它的格式如下：
+       *    247058835670437888-from:name-to:name
+       * </pre>
+       *
+       * <code>string id = 1;</code>
+       */
+      public Builder setId(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *消息的唯一标识
+       *    它的格式如下：
+       *    247058835670437888-from:name-to:name
+       * </pre>
+       *
+       * <code>string id = 1;</code>
+       */
+      public Builder clearId() {
+        
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *消息的唯一标识
+       *    它的格式如下：
+       *    247058835670437888-from:name-to:name
+       * </pre>
+       *
+       * <code>string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      private Object timestamp_ = "";
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public String getTimestamp() {
+        Object ref = timestamp_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          timestamp_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTimestampBytes() {
+        Object ref = timestamp_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          timestamp_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public Builder setTimestamp(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public Builder clearTimestamp() {
+        
+        timestamp_ = getDefaultInstance().getTimestamp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public Builder setTimestampBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+
       private Object from_ = "";
       /**
-       * <code>string from = 1;</code>
+       * <pre>
+       *发送端
+       * </pre>
+       *
+       * <code>string from = 3;</code>
        */
       public String getFrom() {
         Object ref = from_;
@@ -596,7 +976,11 @@ public final class ChatProtocol {
         }
       }
       /**
-       * <code>string from = 1;</code>
+       * <pre>
+       *发送端
+       * </pre>
+       *
+       * <code>string from = 3;</code>
        */
       public com.google.protobuf.ByteString
           getFromBytes() {
@@ -612,7 +996,11 @@ public final class ChatProtocol {
         }
       }
       /**
-       * <code>string from = 1;</code>
+       * <pre>
+       *发送端
+       * </pre>
+       *
+       * <code>string from = 3;</code>
        */
       public Builder setFrom(
           String value) {
@@ -625,7 +1013,11 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>string from = 1;</code>
+       * <pre>
+       *发送端
+       * </pre>
+       *
+       * <code>string from = 3;</code>
        */
       public Builder clearFrom() {
         
@@ -634,7 +1026,11 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>string from = 1;</code>
+       * <pre>
+       *发送端
+       * </pre>
+       *
+       * <code>string from = 3;</code>
        */
       public Builder setFromBytes(
           com.google.protobuf.ByteString value) {
@@ -650,7 +1046,11 @@ public final class ChatProtocol {
 
       private Object to_ = "";
       /**
-       * <code>string to = 2;</code>
+       * <pre>
+       *目标端
+       * </pre>
+       *
+       * <code>string to = 4;</code>
        */
       public String getTo() {
         Object ref = to_;
@@ -665,7 +1065,11 @@ public final class ChatProtocol {
         }
       }
       /**
-       * <code>string to = 2;</code>
+       * <pre>
+       *目标端
+       * </pre>
+       *
+       * <code>string to = 4;</code>
        */
       public com.google.protobuf.ByteString
           getToBytes() {
@@ -681,7 +1085,11 @@ public final class ChatProtocol {
         }
       }
       /**
-       * <code>string to = 2;</code>
+       * <pre>
+       *目标端
+       * </pre>
+       *
+       * <code>string to = 4;</code>
        */
       public Builder setTo(
           String value) {
@@ -694,7 +1102,11 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>string to = 2;</code>
+       * <pre>
+       *目标端
+       * </pre>
+       *
+       * <code>string to = 4;</code>
        */
       public Builder clearTo() {
         
@@ -703,7 +1115,11 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>string to = 2;</code>
+       * <pre>
+       *目标端
+       * </pre>
+       *
+       * <code>string to = 4;</code>
        */
       public Builder setToBytes(
           com.google.protobuf.ByteString value) {
@@ -719,7 +1135,11 @@ public final class ChatProtocol {
 
       private Object body_ = "";
       /**
-       * <code>string body = 3;</code>
+       * <pre>
+       *消息体
+       * </pre>
+       *
+       * <code>string body = 5;</code>
        */
       public String getBody() {
         Object ref = body_;
@@ -734,7 +1154,11 @@ public final class ChatProtocol {
         }
       }
       /**
-       * <code>string body = 3;</code>
+       * <pre>
+       *消息体
+       * </pre>
+       *
+       * <code>string body = 5;</code>
        */
       public com.google.protobuf.ByteString
           getBodyBytes() {
@@ -750,7 +1174,11 @@ public final class ChatProtocol {
         }
       }
       /**
-       * <code>string body = 3;</code>
+       * <pre>
+       *消息体
+       * </pre>
+       *
+       * <code>string body = 5;</code>
        */
       public Builder setBody(
           String value) {
@@ -763,7 +1191,11 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>string body = 3;</code>
+       * <pre>
+       *消息体
+       * </pre>
+       *
+       * <code>string body = 5;</code>
        */
       public Builder clearBody() {
         
@@ -772,7 +1204,11 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>string body = 3;</code>
+       * <pre>
+       *消息体
+       * </pre>
+       *
+       * <code>string body = 5;</code>
        */
       public Builder setBodyBytes(
           com.google.protobuf.ByteString value) {
@@ -853,20 +1289,30 @@ public final class ChatProtocol {
         getUidBytes ();
 
     /**
-     * <code>.Presence.Action action = 2;</code>
+     * <code>string timestamp = 2;</code>
+     */
+    String getTimestamp ();
+    /**
+     * <code>string timestamp = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getTimestampBytes ();
+
+    /**
+     * <code>.Presence.Action action = 3;</code>
      */
     int getActionValue ();
     /**
-     * <code>.Presence.Action action = 2;</code>
+     * <code>.Presence.Action action = 3;</code>
      */
     Presence.Action getAction ();
 
     /**
-     * <code>.Presence.Mode mode = 3;</code>
+     * <code>.Presence.Mode mode = 4;</code>
      */
     int getModeValue ();
     /**
-     * <code>.Presence.Mode mode = 3;</code>
+     * <code>.Presence.Mode mode = 4;</code>
      */
     Presence.Mode getMode ();
   }
@@ -884,6 +1330,7 @@ public final class ChatProtocol {
     }
     private Presence() {
       uid_ = "";
+      timestamp_ = "";
       action_ = 0;
       mode_ = 0;
     }
@@ -918,13 +1365,19 @@ public final class ChatProtocol {
               uid_ = s;
               break;
             }
-            case 16: {
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
+              timestamp_ = s;
+              break;
+            }
+            case 24: {
               int rawValue = input.readEnum();
 
               action_ = rawValue;
               break;
             }
-            case 24: {
+            case 32: {
               int rawValue = input.readEnum();
 
               mode_ = rawValue;
@@ -1266,16 +1719,50 @@ public final class ChatProtocol {
       }
     }
 
-    public static final int ACTION_FIELD_NUMBER = 2;
+    public static final int TIMESTAMP_FIELD_NUMBER = 2;
+    private volatile Object timestamp_;
+    /**
+     * <code>string timestamp = 2;</code>
+     */
+    public String getTimestamp() {
+      Object ref = timestamp_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        timestamp_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string timestamp = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTimestampBytes() {
+      Object ref = timestamp_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        timestamp_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int ACTION_FIELD_NUMBER = 3;
     private int action_;
     /**
-     * <code>.Presence.Action action = 2;</code>
+     * <code>.Presence.Action action = 3;</code>
      */
     public int getActionValue() {
       return action_;
     }
     /**
-     * <code>.Presence.Action action = 2;</code>
+     * <code>.Presence.Action action = 3;</code>
      */
     public Action getAction() {
       @SuppressWarnings("deprecation")
@@ -1283,16 +1770,16 @@ public final class ChatProtocol {
       return result == null ? Action.UNRECOGNIZED : result;
     }
 
-    public static final int MODE_FIELD_NUMBER = 3;
+    public static final int MODE_FIELD_NUMBER = 4;
     private int mode_;
     /**
-     * <code>.Presence.Mode mode = 3;</code>
+     * <code>.Presence.Mode mode = 4;</code>
      */
     public int getModeValue() {
       return mode_;
     }
     /**
-     * <code>.Presence.Mode mode = 3;</code>
+     * <code>.Presence.Mode mode = 4;</code>
      */
     public Mode getMode() {
       @SuppressWarnings("deprecation")
@@ -1317,11 +1804,14 @@ public final class ChatProtocol {
       if (!getUidBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uid_);
       }
+      if (!getTimestampBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, timestamp_);
+      }
       if (action_ != Action.LOGIN.getNumber()) {
-        output.writeEnum(2, action_);
+        output.writeEnum(3, action_);
       }
       if (mode_ != Mode.ONLINE.getNumber()) {
-        output.writeEnum(3, mode_);
+        output.writeEnum(4, mode_);
       }
       unknownFields.writeTo(output);
     }
@@ -1335,13 +1825,16 @@ public final class ChatProtocol {
       if (!getUidBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uid_);
       }
+      if (!getTimestampBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, timestamp_);
+      }
       if (action_ != Action.LOGIN.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, action_);
+          .computeEnumSize(3, action_);
       }
       if (mode_ != Mode.ONLINE.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, mode_);
+          .computeEnumSize(4, mode_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1361,6 +1854,8 @@ public final class ChatProtocol {
       boolean result = true;
       result = result && getUid()
           .equals(other.getUid());
+      result = result && getTimestamp()
+          .equals(other.getTimestamp());
       result = result && action_ == other.action_;
       result = result && mode_ == other.mode_;
       result = result && unknownFields.equals(other.unknownFields);
@@ -1376,6 +1871,8 @@ public final class ChatProtocol {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + UID_FIELD_NUMBER;
       hash = (53 * hash) + getUid().hashCode();
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + getTimestamp().hashCode();
       hash = (37 * hash) + ACTION_FIELD_NUMBER;
       hash = (53 * hash) + action_;
       hash = (37 * hash) + MODE_FIELD_NUMBER;
@@ -1515,6 +2012,8 @@ public final class ChatProtocol {
         super.clear();
         uid_ = "";
 
+        timestamp_ = "";
+
         action_ = 0;
 
         mode_ = 0;
@@ -1546,6 +2045,7 @@ public final class ChatProtocol {
       public Presence buildPartial() {
         Presence result = new Presence(this);
         result.uid_ = uid_;
+        result.timestamp_ = timestamp_;
         result.action_ = action_;
         result.mode_ = mode_;
         onBuilt();
@@ -1598,6 +2098,10 @@ public final class ChatProtocol {
         if (other == Presence.getDefaultInstance()) return this;
         if (!other.getUid().isEmpty()) {
           uid_ = other.uid_;
+          onChanged();
+        }
+        if (!other.getTimestamp().isEmpty()) {
+          timestamp_ = other.timestamp_;
           onChanged();
         }
         if (other.action_ != 0) {
@@ -1704,15 +2208,84 @@ public final class ChatProtocol {
         return this;
       }
 
+      private Object timestamp_ = "";
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public String getTimestamp() {
+        Object ref = timestamp_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          timestamp_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTimestampBytes() {
+        Object ref = timestamp_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          timestamp_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public Builder setTimestamp(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public Builder clearTimestamp() {
+        
+        timestamp_ = getDefaultInstance().getTimestamp();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string timestamp = 2;</code>
+       */
+      public Builder setTimestampBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+
       private int action_ = 0;
       /**
-       * <code>.Presence.Action action = 2;</code>
+       * <code>.Presence.Action action = 3;</code>
        */
       public int getActionValue() {
         return action_;
       }
       /**
-       * <code>.Presence.Action action = 2;</code>
+       * <code>.Presence.Action action = 3;</code>
        */
       public Builder setActionValue(int value) {
         action_ = value;
@@ -1720,7 +2293,7 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>.Presence.Action action = 2;</code>
+       * <code>.Presence.Action action = 3;</code>
        */
       public Action getAction() {
         @SuppressWarnings("deprecation")
@@ -1728,7 +2301,7 @@ public final class ChatProtocol {
         return result == null ? Action.UNRECOGNIZED : result;
       }
       /**
-       * <code>.Presence.Action action = 2;</code>
+       * <code>.Presence.Action action = 3;</code>
        */
       public Builder setAction(Action value) {
         if (value == null) {
@@ -1740,7 +2313,7 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>.Presence.Action action = 2;</code>
+       * <code>.Presence.Action action = 3;</code>
        */
       public Builder clearAction() {
         
@@ -1751,13 +2324,13 @@ public final class ChatProtocol {
 
       private int mode_ = 0;
       /**
-       * <code>.Presence.Mode mode = 3;</code>
+       * <code>.Presence.Mode mode = 4;</code>
        */
       public int getModeValue() {
         return mode_;
       }
       /**
-       * <code>.Presence.Mode mode = 3;</code>
+       * <code>.Presence.Mode mode = 4;</code>
        */
       public Builder setModeValue(int value) {
         mode_ = value;
@@ -1765,7 +2338,7 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>.Presence.Mode mode = 3;</code>
+       * <code>.Presence.Mode mode = 4;</code>
        */
       public Mode getMode() {
         @SuppressWarnings("deprecation")
@@ -1773,7 +2346,7 @@ public final class ChatProtocol {
         return result == null ? Mode.UNRECOGNIZED : result;
       }
       /**
-       * <code>.Presence.Mode mode = 3;</code>
+       * <code>.Presence.Mode mode = 4;</code>
        */
       public Builder setMode(Mode value) {
         if (value == null) {
@@ -1785,7 +2358,7 @@ public final class ChatProtocol {
         return this;
       }
       /**
-       * <code>.Presence.Mode mode = 3;</code>
+       * <code>.Presence.Mode mode = 4;</code>
        */
       public Builder clearMode() {
         
@@ -1865,14 +2438,16 @@ public final class ChatProtocol {
       descriptor;
   static {
     String[] descriptorData = {
-      "\n\022ChatProtocol.proto\"1\n\007Message\022\014\n\004from\030" +
-      "\001 \001(\t\022\n\n\002to\030\002 \001(\t\022\014\n\004body\030\003 \001(\t\"\277\001\n\010Pres" +
-      "ence\022\013\n\003uid\030\001 \001(\t\022 \n\006action\030\002 \001(\0162\020.Pres" +
-      "ence.Action\022\034\n\004mode\030\003 \001(\0162\016.Presence.Mod" +
-      "e\"\037\n\006Action\022\t\n\005LOGIN\020\000\022\n\n\006LOGOUT\020\001\"E\n\004Mo" +
-      "de\022\n\n\006ONLINE\020\000\022\010\n\004AWAY\020\001\022\010\n\004CHAT\020\002\022\007\n\003DN" +
-      "D\020\003\022\006\n\002XA\020\004\022\014\n\010CLOAKING\020\005B,\n\034pers.ontolo" +
-      "gy.blaze.protocolB\014ChatProtocolb\006proto3"
+      "\n\022ChatProtocol.proto\"P\n\007Message\022\n\n\002id\030\001 " +
+      "\001(\t\022\021\n\ttimestamp\030\002 \001(\t\022\014\n\004from\030\003 \001(\t\022\n\n\002" +
+      "to\030\004 \001(\t\022\014\n\004body\030\005 \001(\t\"\322\001\n\010Presence\022\013\n\003u" +
+      "id\030\001 \001(\t\022\021\n\ttimestamp\030\002 \001(\t\022 \n\006action\030\003 " +
+      "\001(\0162\020.Presence.Action\022\034\n\004mode\030\004 \001(\0162\016.Pr" +
+      "esence.Mode\"\037\n\006Action\022\t\n\005LOGIN\020\000\022\n\n\006LOGO" +
+      "UT\020\001\"E\n\004Mode\022\n\n\006ONLINE\020\000\022\010\n\004AWAY\020\001\022\010\n\004CH" +
+      "AT\020\002\022\007\n\003DND\020\003\022\006\n\002XA\020\004\022\014\n\010CLOAKING\020\005B,\n\034p" +
+      "ers.ontology.blaze.protocolB\014ChatProtoco" +
+      "lb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1891,13 +2466,13 @@ public final class ChatProtocol {
     internal_static_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Message_descriptor,
-        new String[] { "From", "To", "Body", });
+        new String[] { "Id", "Timestamp", "From", "To", "Body", });
     internal_static_Presence_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Presence_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Presence_descriptor,
-        new String[] { "Uid", "Action", "Mode", });
+        new String[] { "Uid", "Timestamp", "Action", "Mode", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
