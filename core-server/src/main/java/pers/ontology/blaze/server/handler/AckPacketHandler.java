@@ -68,9 +68,9 @@ public class AckPacketHandler implements PacketBodyHandler<TransportProtocol.Ack
                 .setMessageId(msg.getMessageId())
                 .done();
 
-        FailFutureListener retryFutureListener = new FailFutureListener(new RetryPerformer(ack_ccn, ctx.channel()));
+//        FailFutureListener retryFutureListener = new FailFutureListener(new RetryPerformer(ack_ccn, ctx.channel()));
         ChannelFuture channelFuture = ctx.writeAndFlush(ack_ccn);
-        channelFuture.addListener(retryFutureListener);
+//        channelFuture.addListener(retryFutureListener);
         channelFuture.addListener(future -> {
             //发送成功
             if (future.cause() == null) {
@@ -103,9 +103,9 @@ public class AckPacketHandler implements PacketBodyHandler<TransportProtocol.Ack
                 .setMessageId(msg.getMessageId())
                 .done();
 
-        FailFutureListener failFutureListener = new FailFutureListener(new RetryPerformer(ack_a, fromChannel));
+//        FailFutureListener failFutureListener = new FailFutureListener(new RetryPerformer(ack_a, fromChannel));
         ChannelFuture channelFuture = fromChannel.writeAndFlush(ack_a);
-        channelFuture.addListener(failFutureListener);
+//        channelFuture.addListener(failFutureListener);
         channelFuture.addListener(future -> {
             //发送成功
             if (future.cause() == null) {

@@ -74,8 +74,8 @@ public class MessagePacketHandler implements PacketBodyHandler<ChatProtocol.Mess
             ChannelFuture channelFuture = toChannel.writeAndFlush(notify);
 
 
-            FailFutureListener failFutureListener = new FailFutureListener(new RetryPerformer(notify, toChannel));
-            channelFuture.addListener(failFutureListener);
+//            FailFutureListener failFutureListener = new FailFutureListener(new RetryPerformer(notify, toChannel));
+//            channelFuture.addListener(failFutureListener);
             channelFuture.addListener(future -> {
                 //发送成功
                 if (future.cause() == null) {
@@ -114,8 +114,8 @@ public class MessagePacketHandler implements PacketBodyHandler<ChatProtocol.Mess
         ChannelFuture channelFuture = fromChannel.writeAndFlush(ack_c);
 
 
-        FailFutureListener failFutureListener = new FailFutureListener(new RetryPerformer(ack_c, fromChannel));
-        channelFuture.addListener(failFutureListener);
+//        FailFutureListener failFutureListener = new FailFutureListener(new RetryPerformer(ack_c, fromChannel));
+//        channelFuture.addListener(failFutureListener);
         channelFuture.addListener(future -> {
             //发送成功
             if (future.cause() == null) {
